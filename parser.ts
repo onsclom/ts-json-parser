@@ -21,14 +21,6 @@ type ParserResult<I, O> = ParserError<I> | ParserSuccess<I, O>
 
 type Parser<I, O> = (input: ParserInput<I>) => ParserResult<I, O>
 
-function parse<I, O>(parser: Parser<I, O>, input: I[]): ParserResult<I, O> {
-  return parser({ input, index: 0 })
-}
-
-function parseString<O>(parser: Parser<string, O>, input: string) {
-  return parse(parser, input.split(""))
-}
-
 function success<I, O>(
   value: O,
   index: number,
@@ -260,7 +252,7 @@ function generateErrorMessage(message: string, index: number) {
 
 function parseJson(json: string) {
   try {
-    const result = parseString(value, json)
+    const result = value({ input: json.split(""), index: 0 })
     if (result.type === "success" && result.index !== json.length)
       return failure("Expected end of input", result.index, json.split(""))
     return result
