@@ -202,15 +202,15 @@ function object(input: ParserInput<string>) {
   cur++
   const results: { [key: string]: Value } = {}
 
-  const firstKeyValResult = parseKeyValPair({ input: chars, index: cur })
+  const firstKeyValResult = keyValPair({ input: chars, index: cur })
   if (firstKeyValResult.type === "success") {
-    const keyValResult = parseKeyValPair({ input: chars, index: cur })
+    const keyValResult = keyValPair({ input: chars, index: cur })
     if (keyValResult.type === "error") return keyValResult
     results[keyValResult.value.key] = keyValResult.value.val
     cur = keyValResult.index
     while (chars[cur] === ",") {
       cur++
-      const keyValResult = parseKeyValPair({ input: chars, index: cur })
+      const keyValResult = keyValPair({ input: chars, index: cur })
       if (keyValResult.type === "error") return keyValResult
       results[keyValResult.value.key] = keyValResult.value.val
       cur = keyValResult.index
@@ -221,7 +221,7 @@ function object(input: ParserInput<string>) {
   return success(results, cur + 1, chars)
 }
 
-function parseKeyValPair(input: ParserInput<string>) {
+function keyValPair(input: ParserInput<string>) {
   const chars = input.input
   let cur = input.index
 
